@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gráfico Interactivo del Corazón</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+      background-color: #FFC0CB;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      justify-content: center;
+    }
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80%;
+      height: 100%;
+    }
+    #graph {
+      width: 60%;
+      height: 500px;
+      display: none;
+    }
+    #right-text {
+      font-size: 24px;
+      color: #FF1493;
+      font-weight: bold;
+      text-align: right;
+      display: none;
+      width: 40%;
+    }
+    #combined-text {
+      font-size: 24px;
+      color: black;
+      text-align: right;
+      display: none;
+    }
+    .highlight {
+      font-size: 30px;
+      font-weight: bold;
+      color: #FF1493;
+    }
+
+    #controls {
+      margin-top: 20px;
+      display: none;
+    }
+    #equation {
+      margin-top: 20px;
+      font-size: 18px;
+      display: none;
+    }
+    #start-btn {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+    #start-btn:hover {
+      background-color: #45a049;
+    }
+    #title {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #FF1493;
+      text-align: center;
+      position: absolute;
+      top: 40vh;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .response-btn {
+      padding: 5px 10px;
+      font-size: 14px;
+      background-color: #d67ee2;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      position: absolute;
+      transition: background-color 0.3s ease;
+    }
+    .response-btn:hover {
+      background-color: #FF1493;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="title">Invitación especial Para mi amorcito <br> <br>
+            ¿Quieres ser mi San Valentín?</div>
+  
+  <div id="buttons-container"></div>
+
+  <div class="container">
+    <div id="graph"></div>
+    <div id="combined-text">
+      <span class="highlight">Lo sabía amorcito ♥</span><br><br>
+      Muy agradecido y halagado<br>
+      de tener a una persona tan <br>
+      especial como usted en mi vida<br>
+      ya nos veremos  (wiiiiii)<br>
+      pronto y pasaremos un  <br>
+      bonito dia juntos <br>
+      <br>
+      <span class="highlight">   <br> Te amo mucho Amocito <3 </span>
+    </div>
+  </div>
+  
+  <div id="controls">
+    <label for="k-value">wiiiiiiiiiii: </label>
+    <span id="k-display">0.00</span>
+  </div>
+  
+  <div id="equation">
+    <p><strong>Ecuación Paramétrica:</strong> <span id="eq-display">(x^2)^(1/3) + 0.7 * sin(k * x) * sqrt(3 - x^2)</span></p>
+    <p><strong>sube sube:</strong> <span id="k-display-text">0.00</span></p>
+  </div>
+
+  <script>
+    let noClickCount = 0;
+    let yesButtons = [];
+
+    function handleNoButtonClick() {
+      noClickCount++;
+      const messages = [
+        "-.- Tas segura de lo que estas haciendo ...", 
+        "Entiendo ta bien sera ps :v", 
+        "Ponga que si oye -.- tas a una ", 
+        "...", 
+        "Ultima oportunidad o viene un bucle :v "
+      ];
+
+      if (noClickCount <= 5) {
+        alert(messages[noClickCount - 1]);
+      } else {
+        alert("Pon SI -.-");
+      }
+
+      if (noClickCount === 5) {
+        setTimeout(function() {
+          location.reload();
+        }, 500);
+      } else {
+        moveButtons('no');
+      }
+    }
+
+    function moveButtons(type) {
+      if (type === 'no') {
+        const noButton = document.querySelector('.no-btn');
+        const randomX = Math.random() * 90 + 'vw';
+        const randomY = Math.random() * 90 + 'vh';
+        noButton.style.left = randomX;
+        noButton.style.top = randomY;
+      }
+      
+      yesButtons.forEach(button => {
+        const randomX = Math.random() * 90 + 'vw';
+        const randomY = Math.random() * 90 + 'vh';
+        button.style.left = randomX;
+        button.style.top = randomY;
+      });
+    }
+
+    function createButtons() {
+      const container = document.getElementById('buttons-container');
+      
+      for (let i = 0; i < 45; i++) {
+        const button = document.createElement('button');
+        button.innerHTML = "Sí";
+        button.classList.add('response-btn', 'yes-btn');
+        button.style.left = Math.random() * 90 + 'vw';
+        button.style.top = Math.random() * 90 + 'vh';
+        
+        button.onclick = function() {
+          moveButtons('yes');
+          startAnimation();
+        };
+
+        yesButtons.push(button);
+        container.appendChild(button);
+      }
+
+      const noButton = document.createElement('button');
+      noButton.innerHTML = "No";
+      noButton.classList.add('response-btn', 'no-btn');
+      noButton.style.left = '45vw';
+      noButton.style.top = '40vh';
+      noButton.onclick = handleNoButtonClick;
+      container.appendChild(noButton);
+    }
+
+    function calculateGraphData(k) {
+      let x_vals = [];
+      let y_vals = [];
+
+      for (let x = -Math.sqrt(2.5); x <= Math.sqrt(2.5); x += 0.01) {
+        let y = Math.pow(x * x, 1/3) + 0.7 * Math.sin(k * x) * Math.sqrt(2.5 - x * x);
+        x_vals.push(x);
+        y_vals.push(y);
+      }
+
+      return { x: x_vals, y: y_vals };
+    }
+
+    function getColor(k) {
+      const colors = ['#800080', '#FF00FF', '#FF1493', '#FF69B4', '#FFB6C1'];
+      const index = Math.floor((k / 100) * colors.length);
+      return colors[index % colors.length];
+    }
+
+    function plotGraph(k) {
+      const data = calculateGraphData(k);
+      
+      const trace = {
+        x: data.x,
+        y: data.y,
+        mode: 'lines',
+        type: 'scatter',
+        line: { color: getColor(k) }
+      };
+
+      const layout = {
+        title: 'Nosotros si fueramos una ecuación paramétrica',
+        xaxis: { 
+          title: 'X', 
+          zeroline: true,
+          range: [-2.5, 2.5],
+          showgrid: true,
+          tickmode: 'linear',
+          dtick: 0.5
+        },
+        yaxis: { 
+          title: 'Y', 
+          zeroline: true,
+          range: [-2.5, 2.5],
+          showgrid: true,
+          tickmode: 'linear',
+          dtick: 0.5
+        },
+        showlegend: false,
+        width: 700,
+        height: 500,
+        plot_bgcolor: 'white',
+        margin: { t: 40, r: 20, b: 40, l: 40 }
+      };
+
+      Plotly.newPlot('graph', [trace], layout);
+    }
+
+    let k = 0;
+    let startTime = null;
+    let duration = 2000;
+
+    function animateK(timestamp) {
+      if (!startTime) startTime = timestamp;
+
+      let elapsedTime = timestamp - startTime;
+
+      let cycleTime = elapsedTime % duration;
+      let progress = cycleTime / duration;
+
+      k = 125 * (Math.sin(progress * Math.PI - Math.PI / 2) + 1) / 2;
+
+      document.getElementById('k-display').innerText = k.toFixed(2);
+      document.getElementById('k-display-text').innerText = k.toFixed(2);
+
+      plotGraph(k);
+
+      requestAnimationFrame(animateK);
+    }
+
+    function startAnimation() {
+      document.getElementById('title').style.display = 'none';
+      document.getElementById('buttons-container').style.display = 'none';
+
+      document.getElementById('graph').style.display = 'block';
+      document.getElementById('controls').style.display = 'block';
+      document.getElementById('equation').style.display = 'block';
+      document.getElementById('combined-text').style.display = 'block';
+
+      requestAnimationFrame(animateK);
+    }
+
+    window.onload = createButtons;
+  </script>
+
+</body>
+</html>
